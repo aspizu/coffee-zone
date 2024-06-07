@@ -13,6 +13,7 @@
         "rootDir": ".",
         "paths": {
             "~/*": ["src/frontend/*"]
-        }
+        },
+        "types": ["vite/client"]
     }
 }
