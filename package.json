@@ -1,0 +1,23 @@
+{
+  "name": "frontend",
+  "description": "frontend",
+  "version": "1.0.0",
+  "author": {
+    "name": "aspizu",
+    "email": "aspizu@protonmail.com"
+  },
+  "type": "module",
+  "scripts": {
+    "fmt": "bunx prettier --write .",
+    "dev": "bunx vite"
+  },
+  "dependencies": {
+    "@preact/signals": "^1.2.3",
+    "preact": "^10.22.0"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.8.2",
+    "prettier": "latest",
+    "vite": "^5.2.13"
+  }
+}

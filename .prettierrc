@@ -1,0 +1,7 @@
+{
+    "tabWidth": 4,
+    "semi": false,
+    "bracketSpacing": false,
+    "experimentalTernaries": true,
+    "printWidth": 88
+}
