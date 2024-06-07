@@ -23,3 +23,4 @@ packages = ["src/backend"]
 
 [tool.rye.scripts]
 dev = { cmd = "uvicorn src.backend:app --reload" }
+prod = { cmd = "uvicorn src.backend:app" }
