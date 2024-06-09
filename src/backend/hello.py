@@ -1,7 +1,10 @@
 from reproca.method import method
-from datetime import datetime
+
+from .db import db
 
 
 @method
 async def hello() -> str:
-    return f"Hello, world! It is {datetime.now().isoformat()}."
+    async with await db() as con, con.cursor() as cur:
+        await cur.execute("select * from account")
+        return repr(await cur.fetchone())

@@ -60,8 +60,6 @@ export function match<const T extends Route>(
 ): RouteParameters<T> | undefined {
     const url = new URL(location, window.location.origin)
     const segments = pathname.split(url.pathname)
-    console.log("route = ", route)
-    console.log("segments = ", segments)
     const parameters: any[] = []
     for (let i = 0; i < route.length; i++) {
         const pattern = route[i]

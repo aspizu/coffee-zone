@@ -10,32 +10,34 @@ const _location = signal(window.location.href)
 export const location: ReadonlySignal<string> = _location
 
 addEventListener("popstate", (event) => {
-	event.preventDefault()
-	_location.value = window.location.href
+    event.preventDefault()
+    _location.value = window.location.href
 })
 
 addEventListener("hashchange", (event) => {
-	event.preventDefault()
-	_location.value = window.location.href
+    event.preventDefault()
+    _location.value = window.location.href
 })
 
 /** Navigate to location, if replace is true then the current location will not be added
  * to the browser's history. */
 export function navigate(
-	location: string,
-	{replace = false}: {replace?: boolean} = {},
+    location: string,
+    {replace = false}: {replace?: boolean} = {},
 ) {
-	const url = new URL(location, window.location.origin)
-	if (url.origin === window.location.origin) {
-		if (replace) {
-			window.history.replaceState(undefined, "", url.href)
-		} else {
-			window.history.pushState(undefined, "", url.href)
-		}
-		_location.value = url.href
-	} else if (replace) {
-		window.location.replace(url.href)
-		return
-	}
-	window.location.href = url.href
+    const url = new URL(location, window.location.origin)
+    if (url.origin === window.location.origin) {
+        if (replace) {
+            window.history.replaceState(undefined, "", url.href)
+        } else {
+            window.history.pushState(undefined, "", url.href)
+        }
+        _location.value = url.href
+    } else {
+        if (replace) {
+            window.location.replace(url.href)
+        } else {
+            window.location.href = url.href
+        }
+    }
 }

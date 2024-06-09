@@ -9,12 +9,35 @@
 #   generate-hashes: false
 
 -e file:.
+aiosmtplib==3.0.1
+    # via backend
+argon2-cffi==23.1.0
+    # via backend
+argon2-cffi-bindings==21.2.0
+    # via argon2-cffi
+cffi==1.16.0
+    # via argon2-cffi-bindings
 click==8.1.7
     # via uvicorn
+emoji==2.12.1
+    # via backend
 h11==0.14.0
     # via uvicorn
 msgspec==0.18.6
     # via reproca
+psycopg==3.1.19
+    # via backend
+psycopg-binary==3.1.19
+    # via psycopg
+pycparser==2.22
+    # via cffi
+pymemcache==4.0.0
+    # via reproca
+python-dotenv==1.0.1
+    # via backend
 reproca @ file:///home/aspizu/Projects/reproca
     # via backend
+typing-extensions==4.12.2
+    # via emoji
+    # via psycopg
 uvicorn==0.30.1

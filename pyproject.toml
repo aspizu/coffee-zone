@@ -3,7 +3,14 @@ name = "backend"
 version = "1.0.0"
 description = "backend"
 authors = [{ name = "aspizu", email = "aspizu@protonmail.com" }]
-dependencies = ["reproca @ file:///home/aspizu/Projects/reproca"]
+dependencies = [
+    "reproca @ file:///home/aspizu/Projects/reproca",
+    "psycopg[binary]>=3.1.19",
+    "python-dotenv>=1.0.1",
+    "argon2-cffi>=23.1.0",
+    "aiosmtplib>=3.0.1",
+    "emoji>=2.12.1",
+]
 readme = "README.md"
 requires-python = ">= 3.12"
 
@@ -21,6 +28,15 @@ allow-direct-references = true
 [tool.hatch.build.targets.wheel]
 packages = ["src/backend"]
 
-[tool.rye.scripts]
-dev = { cmd = "uvicorn src.backend:app --reload" }
-prod = { cmd = "uvicorn src.backend:app" }
+[tool.pyright]
+typeCheckingMode = "strict"
+reportMissingTypeStubs = false
+reportUnknownArgumentType = false
+reportUnknownLambdaType = false
+reportUnknownMemberType = false
+reportUnknownParameterType = false
+reportUnknownVariableType = false
+
+[tool.ruff.lint]
+select = ['ALL']
+ignore = ['E402', 'D', 'COM', 'C408', 'S101', 'D203', 'ISC001', 'D213', 'S311']

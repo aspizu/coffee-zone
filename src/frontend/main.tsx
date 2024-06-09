@@ -1,5 +1,8 @@
 import {render} from "preact"
-import "~/main.css"
 import {App} from "~/app"
+import "~/main.css"
+import {fetchSession} from "./session"
 
 render(<App />, document.getElementById("root")!)
+
+fetchSession()

@@ -19,12 +19,16 @@ function Link({setAriaCurrent = false, setCurrentParent = false, ...props}: Link
             props["data-current-parent"] = ""
         }
     }
-    props.onClick = (event) => {
-        if (!href) return
-        event.preventDefault()
-        navigate(href)
-    }
-    return <a {...props} />
+    return (
+        <a
+            {...props}
+            onClick={(event) => {
+                if (!href) return
+                event.preventDefault()
+                navigate(href)
+            }}
+        />
+    )
 }
 
 export function NavLink({setAriaCurrent = true, ...props}: LinkProps) {
