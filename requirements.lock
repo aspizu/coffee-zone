@@ -27,12 +27,16 @@ psycopg-binary==3.1.19
     # via psycopg
 pycparser==2.22
     # via cffi
-pymemcache==4.0.0
+python-binary-memcached==0.31.2
     # via reproca
 python-dotenv==1.0.1
     # via backend
 reproca @ file:///home/aspizu/Projects/reproca
     # via backend
+six==1.16.0
+    # via python-binary-memcached
 typing-extensions==4.12.2
     # via emoji
     # via psycopg
+uhashring==2.3
+    # via python-binary-memcached

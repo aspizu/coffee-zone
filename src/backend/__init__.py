@@ -9,7 +9,11 @@ from reproca.sessions import Sessions
 from . import env
 from .models import Session
 
-memcache = Memcache(env.MEMCACHE)
+memcache = Memcache(
+    servers=env.MEMCACHE_SERVERS,
+    username=env.MEMCACHE_USERNAME,
+    password=env.MEMCACHE_PASSWORD,
+)
 sessions: Sessions[int, Session] = Sessions(memcache)
 
 from . import comment, feed, hello, post, reply, user
