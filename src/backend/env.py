@@ -7,7 +7,7 @@ load_dotenv()
 VITE_BACKEND = os.environ["VITE_BACKEND"]
 FRONTEND = os.environ["FRONTEND"]
 MEMCACHE = os.environ["MEMCACHE"]
-DBNAME = os.environ["DBNAME"]
+DB = os.environ["DB"]
 SMTP_HOST = os.environ["SMTP_HOST"]
 SMTP_PORT = int(os.environ["SMTP_PORT"])
 SMTP_EMAIL = os.environ["SMTP_EMAIL"]
