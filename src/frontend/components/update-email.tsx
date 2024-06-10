@@ -1,28 +1,9 @@
-import {useComputed, useSignal, useSignalEffect} from "@preact/signals"
-import {useRef} from "preact/hooks"
+import {useComputed, useSignal} from "@preact/signals"
 import {update_email} from "~/api"
 import {Input} from "~/components/input"
+import {useRateLimiter} from "~/hooks/rate-limiter"
 import {emailValidator, passwordValidator, usernameValidator} from "~/models"
 import {navigate} from "~/signal-router/location"
-
-function useRateLimiter(rate: number) {
-    const ref = useRef(0)
-    const lock = useSignal(false)
-    useSignalEffect(() => {
-        if (lock.value) {
-            ref.current = rate
-            const interval = setInterval(() => {
-                ref.current--
-                if (ref.current <= 0) {
-                    lock.value = false
-                    clearInterval(interval)
-                }
-            }, 1000)
-            return () => clearInterval(interval)
-        }
-    })
-    return lock
-}
 
 export function UpdateEmail() {
     const lock = useRateLimiter(60)

@@ -2,11 +2,11 @@ import {useComputed, useSignal} from "@preact/signals"
 import {LoginResult, login} from "~/api"
 import {Input} from "~/components/input"
 import {passwordValidator, usernameValidator} from "~/models"
-import {session} from "~/session"
+import {fetchSession, isLoggedIn} from "~/session"
 import {navigate} from "~/signal-router/location"
 
 export function Login() {
-    if (session.value) {
+    if (isLoggedIn()) {
         navigate("/")
     }
     const username = useSignal("")
@@ -26,7 +26,7 @@ export function Login() {
         if (!result.ok) {
             console.error(result.value)
         } else if (result.value === LoginResult.OK) {
-            navigate("/")
+            await fetchSession()
         } else if (result.value === LoginResult.INCORRECT_PASSWORD) {
             passwordError.value = "Invalid password."
         } else if (result.value === LoginResult.VERIFICATION_REQUIRED) {

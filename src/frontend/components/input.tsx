@@ -1,7 +1,6 @@
 import {Signal, useComputed, useSignal} from "@preact/signals"
 import {EyeNoneIcon, EyeOpenIcon} from "@radix-ui/react-icons"
 import {useId} from "preact/hooks"
-import {JSX} from "preact/jsx-runtime"
 
 export interface InputProps {
     label: string
@@ -23,8 +22,8 @@ export function Input({
     const id = useId()
     const isVisible = useSignal(false)
     const type = useComputed(() => (password && !isVisible.value ? "password" : "text"))
-    const onInput: JSX.InputEventHandler<HTMLInputElement> = (event) => {
-        value.value = (event.target as HTMLInputElement).value
+    function onInput(event: any) {
+        value.value = event.target.value
         if (value.value) {
             error.value = validator(value.value)
         } else {

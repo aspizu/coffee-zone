@@ -12,9 +12,9 @@ from .models import Session
 memcache = Memcache(env.MEMCACHE)
 sessions: Sessions[int, Session] = Sessions(memcache)
 
-from . import hello, user
+from . import comment, feed, hello, post, reply, user
 
-__all__ = ["hello", "user"]
+__all__ = ["comment", "feed", "hello", "post", "reply", "user"]
 
 with Path("src/frontend/api.ts").open("w") as file:
     code_generator = CodeGenerator(file)

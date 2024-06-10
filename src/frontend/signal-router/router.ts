@@ -1,4 +1,5 @@
 import {signal, useComputed, type Signal} from "@preact/signals"
+import {useRef} from "preact/hooks"
 import {match, type Route, type RouteSignalParameters} from "./route"
 
 export type Routes = {
@@ -6,20 +7,20 @@ export type Routes = {
 }
 
 export function useRouter<const T extends Routes>(location: Signal<string>, routes: T) {
-    let parameterSignals: Signal<any>[] = []
+    let parameterSignals = useRef<Signal<any>[]>([])
     const route = useComputed(() => {
         for (const [key, value] of Object.entries(routes)) {
             const parameters = match(value, location.value)
             if (parameters) {
-                if (parameterSignals.length >= parameters.length) {
+                if (parameterSignals.current.length >= parameters.length) {
                     for (let i = 0; i < parameters.length; i++) {
-                        parameterSignals[i].value = parameters[i]
+                        parameterSignals.current[i].value = parameters[i]
                     }
-                    parameterSignals.splice(parameters.length)
+                    parameterSignals.current.splice(parameters.length)
                 } else {
-                    parameterSignals = []
+                    parameterSignals.current = []
                     for (let i = 0; i < parameters.length; i++) {
-                        parameterSignals.push(signal(parameters[i]))
+                        parameterSignals.current.push(signal(parameters[i]))
                     }
                 }
                 return key
@@ -36,6 +37,6 @@ export function useRouter<const T extends Routes>(location: Signal<string>, rout
         if (route.value === undefined) {
             return cases.default?.()
         }
-        return cases[route.value]?.(...(parameterSignals as any))
+        return cases[route.value]?.(...(parameterSignals.current as any))
     }
 }

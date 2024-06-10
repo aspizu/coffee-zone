@@ -33,9 +33,18 @@ create table post (
     author     integer not null,
     board      integer not null,
     content    text    not null,
-    created_at text    not null,
+    created_at bigint  not null,
     foreign key (author) references account (id),
     foreign key (board) references board (id)
+);
+
+create table post_vote (
+    voter integer not null,
+    post  integer not null,
+    vote  integer not null check (vote in (-1, 1)),
+    primary key (voter, post),
+    foreign key (voter) references account (id),
+    foreign key (post) references post (id)
 );
 
 create table comment (
@@ -43,9 +52,18 @@ create table comment (
     author     integer not null,
     post       integer not null,
     content    text    not null,
-    created_at text    not null,
+    created_at bigint  not null,
     foreign key (author) references account (id),
     foreign key (post) references post (id)
+);
+
+create table comment_vote (
+    voter   integer not null,
+    comment integer not null,
+    vote   integer not null check (vote in (-1, 1)),
+    primary key (voter, comment),
+    foreign key (voter) references account (id),
+    foreign key (comment) references comment (id)
 );
 
 create table reply (
@@ -56,4 +74,13 @@ create table reply (
     created_at text    not null,
     foreign key (author) references account (id),
     foreign key (comment) references comment (id)
+);
+
+create table reply_vote (
+    voter integer not null,
+    reply integer not null,
+    vote  integer not null check (vote in (-1, 1)),
+    primary key (voter, reply),
+    foreign key (voter) references account (id),
+    foreign key (reply) references reply (id)
 );

@@ -1,6 +1,11 @@
 import {UpdateEmail} from "~/components/update-email"
+import {isLoggedIn} from "~/session"
+import {navigate} from "~/signal-router/location"
 
 export function Verify() {
+    if (isLoggedIn()) {
+        navigate("/")
+    }
     return (
         <div class="form">
             <span class="bold">A verification email was sent to your email.</span>

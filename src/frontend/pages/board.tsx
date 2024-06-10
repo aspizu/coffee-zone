@@ -1,13 +1,18 @@
-import {useSignal, useSignalEffect} from "@preact/signals"
+import {Signal, useSignal, useSignalEffect} from "@preact/signals"
 import * as api from "~/api"
 import {Post} from "~/components/post"
 import {downvoteScore, upvoteScore} from "~/models"
 import {navigate} from "~/signal-router/location"
+import {NotFound} from "./not-found"
 
-export function Root() {
+export interface BoardProps {
+    board: Signal<string>
+}
+
+export function Board({board}: BoardProps) {
     const posts = useSignal<api.Post[] | "loading">("loading")
     async function fetchPosts() {
-        const result = await api.get_root_feed()
+        const result = await api.get_board_feed({board: board.value})
         if (!result.ok) {
             console.error(result.value)
             return
@@ -51,6 +56,9 @@ export function Root() {
     useSignalEffect(() => {
         fetchPosts()
     })
+    if (Array.isArray(posts.value) && posts.value.length === 0) {
+        return <NotFound />
+    }
     return (
         <div class="feed">
             {posts.value === "loading" ?

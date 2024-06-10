@@ -1,3 +1,4 @@
+import contextlib
 import random
 import secrets
 from email.message import EmailMessage
@@ -8,7 +9,6 @@ import argon2
 import emoji
 from msgspec import UNSET, UnsetType
 from psycopg.errors import UniqueViolation
-
 from reproca.credentials import Credentials
 from reproca.method import method, rate_limit
 from reproca.result import Err, Ok, Result
@@ -337,12 +337,15 @@ async def reset_password(
     message["To"] = email
     message["Subject"] = "Reset your coffeezone account's password"
     message.set_content(
-        RESET_PASSWORD_MAIL_TEMPLATE.format(username=username, host=env.FRONTEND)
+        RESET_PASSWORD_MAIL_TEMPLATE.format(
+            username=username, host=env.FRONTEND, reset_token=reset_token
+        )
     )
     await aiosmtplib.send(
         message,
         hostname=env.SMTP_HOST,
         port=env.SMTP_PORT,
+        username=env.SMTP_EMAIL,
         password=env.SMTP_PASSWORD,
     )
 
@@ -357,8 +360,9 @@ async def update_password(
         or not is_password_ok(password)
     ):
         return
-    reset_token, reset_time = reset_token.split(":")
-    reset_time = int(reset_time)
+    reset_time = 0
+    with contextlib.suppress(ValueError):
+        reset_time = int(reset_token.split(":")[1])
     if seconds_since_1970() - reset_time > RESET_TOKEN_EXPIRY:
         return
     async with await db() as con, con.cursor() as cur:

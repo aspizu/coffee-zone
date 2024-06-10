@@ -2,11 +2,11 @@ import {useComputed, useSignal} from "@preact/signals"
 import {RegisterError, register} from "~/api"
 import {Input} from "~/components/input"
 import {emailValidator, passwordValidator, usernameValidator} from "~/models"
-import {fetchSession, session} from "~/session"
+import {fetchSession, isLoggedIn} from "~/session"
 import {navigate} from "~/signal-router/location"
 
 export function Register() {
-    if (session.value) {
+    if (isLoggedIn()) {
         navigate("/")
     }
     const username = useSignal("")
