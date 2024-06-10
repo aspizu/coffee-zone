@@ -1,6 +1,7 @@
 import {useComputed, useSignal} from "@preact/signals"
 import * as api from "~/api"
 import {contentValidator} from "~/models"
+import {isLoggedIn} from "~/session"
 import {Link} from "~/signal-router/link"
 import {Author} from "./author"
 import {Markup} from "./markup"
@@ -27,6 +28,7 @@ export function Comment({
     onDownvote,
     onReply: onReplyCallback,
 }: CommentProps) {
+    const loading = useSignal(false)
     const isReplying = useSignal(false)
     const reply = useSignal("")
     const replyError = useSignal<string | undefined>(undefined)
@@ -35,6 +37,7 @@ export function Comment({
         return false
     })
     async function onReply() {
+        loading.value = true
         const result = await api.create_reply({comment_id: id, content: reply.value})
         if (!result.ok) {
             console.error(result.value)
@@ -47,6 +50,7 @@ export function Comment({
         isReplying.value = false
         onReplyCallback(result.value, reply.value)
         reply.value = ""
+        loading.value = false
     }
     return (
         <div class="post">
@@ -73,17 +77,21 @@ export function Comment({
                     >
                         {reply_count || "no"} replies
                     </Link>
-                    <span class="post__separator">•</span>
-                    <a
-                        class="link link--small"
-                        href="#"
-                        onClick={(event) => {
-                            event.preventDefault()
-                            isReplying.value = !isReplying.value
-                        }}
-                    >
-                        {isReplying.value ? "cancel" : "reply"}
-                    </a>
+                    {isLoggedIn() && (
+                        <>
+                            <span class="post__separator">•</span>
+                            <a
+                                class="link link--small"
+                                href="#"
+                                onClick={(event) => {
+                                    event.preventDefault()
+                                    isReplying.value = !isReplying.value
+                                }}
+                            >
+                                {isReplying.value ? "cancel" : "reply"}
+                            </a>
+                        </>
+                    )}
                 </div>
                 {isReplying.value && (
                     <>
@@ -99,6 +107,7 @@ export function Comment({
                             disabled={invalid}
                             onClick={onReply}
                         >
+                            {loading.value && <div class="spinner spinner--inverted" />}
                             Reply
                         </button>
                     </>

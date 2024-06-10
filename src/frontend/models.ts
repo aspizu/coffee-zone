@@ -70,6 +70,12 @@ export function contentValidator(content: string) {
     }
 }
 
+export function statusValidator(status: string) {
+    if (status.length > 128) {
+        return "Status is too long."
+    }
+}
+
 export function upvoteScore(score: number, vote: Vote) {
     switch (vote) {
         case Vote.UPVOTE:

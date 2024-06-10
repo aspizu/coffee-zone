@@ -55,3 +55,12 @@ class Post(Struct):
     content: str
     created_at: int
     comment_count: int
+
+
+class User(Struct):
+    avatar: str
+    status: str
+    created_at: int
+    last_login_at: int
+    karma: int
+    posts: list[Post]

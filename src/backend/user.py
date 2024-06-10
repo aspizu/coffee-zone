@@ -9,6 +9,7 @@ import argon2
 import emoji
 from msgspec import UNSET, UnsetType
 from psycopg.errors import UniqueViolation
+
 from reproca.credentials import Credentials
 from reproca.method import method, rate_limit
 from reproca.result import Err, Ok, Result
@@ -16,7 +17,7 @@ from reproca.result import Err, Ok, Result
 from . import env, sessions
 from .db import db
 from .misc import seconds_since_1970
-from .models import Session
+from .models import Post, Session, User, Vote
 
 ph = argon2.PasswordHasher()
 
@@ -423,3 +424,81 @@ async def update_status(
 @method
 async def get_session(session: Session | None) -> Session | None:
     return session
+
+
+@method
+async def get_user(session: Session | None, username: str) -> User | None:
+    async with await db() as con, con.cursor() as cur:
+        await cur.execute(
+            """
+            select
+                id,
+                avatar,
+                status,
+                created_at,
+                last_login_at,
+                (select sum(vote) from post_vote join post on post.id = post_vote.post
+                where post.author = account.id) as karma
+            from account
+            where username = %(username)s
+            """,
+            dict(username=username),
+        )
+        account = await cur.fetchone()
+        if account is None:
+            return None
+        await cur.execute(
+            """
+            select
+                post.id,
+                coalesce(
+                    (select 'UPVOTE' from post_vote
+                    where post = post.id and voter = %(voter)s and vote = 1),
+                    (select 'DOWNVOTE' from post_vote
+                    where post = post.id and voter = %(voter)s and vote = -1),
+                    'NONE'
+                ) as vote,
+                coalesce(
+                    (select sum(vote) from post_vote where post = post.id),
+                    0
+                ) as score,
+                board.name as board,
+                post.content,
+                post.created_at,
+                coalesce(
+                    (select count(id) from comment where post = post.id),
+                    0
+                ) as comment_count
+            from post
+            join board on post.board = board.id
+            where author = %(author)s
+            order by score desc
+            """,
+            dict(
+                voter=session.id if session else None,
+                author=account.id,
+            ),
+        )
+        posts = [
+            Post(
+                id=row.id,
+                author_username=username,
+                author_avatar=account.avatar,
+                author_status=account.status,
+                vote=Vote[row.vote],
+                score=row.score,
+                board=row.board,
+                content=row.content,
+                created_at=row.created_at,
+                comment_count=row.comment_count,
+            )
+            for row in await cur.fetchall()
+        ]
+    return User(
+        avatar=account.avatar,
+        status=account.status,
+        created_at=account.created_at,
+        last_login_at=account.last_login_at,
+        karma=account.karma,
+        posts=posts,
+    )

@@ -6,6 +6,7 @@ import {fetchSession, isLoggedIn} from "~/session"
 import {navigate} from "~/signal-router/location"
 
 export function Login() {
+    const loading = useSignal(false)
     if (isLoggedIn()) {
         navigate("/")
     }
@@ -14,11 +15,13 @@ export function Login() {
     const password = useSignal("")
     const passwordError = useSignal<string | undefined>(undefined)
     const invalid = useComputed(() => {
+        if (loading.value) return true
         if (usernameValidator(username.value)) return true
         if (passwordValidator(password.value)) return true
         return false
     })
     async function onLogin() {
+        loading.value = true
         const result = await login({
             username: username.value,
             password: password.value,
@@ -31,7 +34,9 @@ export function Login() {
             passwordError.value = "Invalid password."
         } else if (result.value === LoginResult.VERIFICATION_REQUIRED) {
             navigate("/verify")
+            return
         }
+        loading.value = false
     }
     return (
         <div class="form">
@@ -51,6 +56,7 @@ export function Login() {
                 validator={passwordValidator}
             />
             <button class="form__button button" disabled={invalid} onClick={onLogin}>
+                {loading.value && <div class="spinner spinner--inverted" />}
                 Login
             </button>
         </div>

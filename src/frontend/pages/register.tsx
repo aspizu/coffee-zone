@@ -9,6 +9,7 @@ export function Register() {
     if (isLoggedIn()) {
         navigate("/")
     }
+    const loading = useSignal(false)
     const username = useSignal("")
     const usernameError = useSignal<string | undefined>(undefined)
     const password = useSignal("")
@@ -18,6 +19,7 @@ export function Register() {
     const email = useSignal("")
     const emailError = useSignal<string | undefined>(undefined)
     const invalid = useComputed(() => {
+        if (loading.value) return true
         if (usernameValidator(username.value)) return true
         if (passwordValidator(password.value)) return true
         if (passwordConfirmationValidator(passwordConfirmation.value)) return true
@@ -30,6 +32,7 @@ export function Register() {
         }
     }
     async function onRegister() {
+        loading.value = true
         const result = await register({
             username: username.value,
             password: password.value,
@@ -43,6 +46,7 @@ export function Register() {
             await fetchSession()
             return
         }
+        loading.value = false
         if (result.value.value === RegisterError.EMAIL_TAKEN) {
             emailError.value = "Email is already taken."
             return
@@ -86,6 +90,7 @@ export function Register() {
                 validator={emailValidator}
             />
             <button class="form__button button" disabled={invalid} onClick={onRegister}>
+                {loading.value && <div class="spinner spinner--inverted" />}
                 Register
             </button>
         </div>

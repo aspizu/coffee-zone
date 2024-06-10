@@ -11,11 +11,10 @@
         "fmt": "bunx prettier --write . ; rye fmt",
         "fe": "bunx vite",
         "be": "uvicorn src.backend:app --reload",
-        "be-prod": "uvicorn src.backend:app",
         "build": "bunx vite build",
-        "memcache": "memcached -s $MEMCACHE",
+        "memcache": "memcached",
         "postgres": "systemctl start postgresql",
-        "psql": "psql -d $DBNAME"
+        "psql": "psql $DB"
     },
     "dependencies": {
         "@preact/signals": "^1.2.3",

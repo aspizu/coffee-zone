@@ -1,6 +1,7 @@
 import {useComputed, useSignal} from "@preact/signals"
 import * as api from "~/api"
 import {contentValidator} from "~/models"
+import {isLoggedIn} from "~/session"
 import {Link} from "~/signal-router/link"
 import {Author} from "./author"
 import {Markup} from "./markup"
@@ -28,14 +29,17 @@ export function Post({
     onDownvote,
     onComment: onCommentCallback,
 }: PostProps) {
+    const loading = useSignal(false)
     const isCommenting = useSignal(false)
     const comment = useSignal("")
     const commentError = useSignal<string | undefined>(undefined)
     const invalid = useComputed(() => {
+        if (loading.value) return true
         if (contentValidator(comment.value)) return true
         return false
     })
     async function onReply() {
+        loading.value = true
         const result = await api.create_comment({post_id: id, content: comment.value})
         if (!result.ok) {
             console.error(result.value)
@@ -48,6 +52,7 @@ export function Post({
         isCommenting.value = false
         onCommentCallback(result.value, comment.value)
         comment.value = ""
+        loading.value = false
     }
     return (
         <div class="post">
@@ -75,21 +80,25 @@ export function Post({
                     <Link class="link link--small post__comments" href={`/post/${id}`}>
                         {comment_count || "no"} comments
                     </Link>
-                    <span class="post__separator">•</span>
-                    <a
-                        class="link link--small"
-                        href="#"
-                        onClick={(event) => {
-                            event.preventDefault()
-                            isCommenting.value = !isCommenting.value
-                        }}
-                    >
-                        {isCommenting.value ?
-                            "cancel"
-                        : comment_count ?
-                            "add comment"
-                        :   "be the first to comment"}
-                    </a>
+                    {isLoggedIn() && (
+                        <>
+                            <span class="post__separator">•</span>
+                            <a
+                                class="link link--small"
+                                href="#"
+                                onClick={(event) => {
+                                    event.preventDefault()
+                                    isCommenting.value = !isCommenting.value
+                                }}
+                            >
+                                {isCommenting.value ?
+                                    "cancel"
+                                : comment_count ?
+                                    "add comment"
+                                :   "be the first to comment"}
+                            </a>
+                        </>
+                    )}
                 </div>
                 {isCommenting.value && (
                     <>
@@ -106,7 +115,8 @@ export function Post({
                             disabled={invalid}
                             onClick={onReply}
                         >
-                            Reply
+                            {loading.value && <div class="spinner spinner--inverted" />}
+                            Add Comment
                         </button>
                     </>
                 )}

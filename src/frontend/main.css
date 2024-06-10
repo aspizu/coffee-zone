@@ -87,6 +87,9 @@ body {
 }
 
 .button {
+    display: flex;
+    align-items: center;
+    gap: 16px;
     padding: 8px 16px;
     background: black;
     border: 1px solid black;
@@ -191,6 +194,7 @@ body {
 .author__detail {
     display: flex;
     flex-direction: column;
+    margin-right: auto;
 }
 
 .author__status {
@@ -200,7 +204,6 @@ body {
 
 .author__created-at {
     font-size: 12px;
-    margin-left: auto;
     color: #666666;
 }
 
@@ -287,9 +290,14 @@ body {
 .spinner {
     width: 20px;
     height: 20px;
-    border: 10px solid black;
-    border-inline-color: transparent;
-    animation: spin 1000ms infinite;
+    border: 2px solid rgba(0, 0, 0, 0.8);
+    border-radius: 9999px;
+    clip-path: inset(50% 0 0 0);
+    animation: spin 500ms linear infinite;
+}
+
+.spinner--inverted {
+    border-color: rgba(255, 255, 255, 0.8);
 }
 
 @keyframes spin {
@@ -416,12 +424,16 @@ body {
         }
     }
 
-    .spinner {
-        border-block-color: white;
-    }
-
     .author__status {
         color: #999999;
+    }
+
+    .spinner {
+        border-color: rgba(255, 255, 255, 0.8);
+    }
+
+    .spinner--inverted {
+        border-color: rgba(0, 0, 0, 0.8);
     }
 }
 
