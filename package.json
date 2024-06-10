@@ -1,32 +1,32 @@
 {
-  "name": "frontend",
-  "description": "frontend",
-  "version": "1.0.0",
-  "author": {
-    "name": "aspizu",
-    "email": "aspizu@protonmail.com"
-  },
-  "type": "module",
-  "scripts": {
-    "fmt": "bunx prettier --write . ; rye fmt",
-    "fe": "bunx vite",
-    "be": "uvicorn src.backend:app --reload",
-    "be-prod": "uvicorn src.backend:app",
-    "build": "bunx vite build",
-    "memcache": "memcached -s $MEMCACHE",
-    "postgres": "systemctl start postgresql",
-    "psql": "psql -d $DBNAME"
-  },
-  "dependencies": {
-    "@preact/signals": "^1.2.3",
-    "@radix-ui/react-icons": "^1.3.0",
-    "date-fns": "^3.6.0",
-    "preact": "^10.22.0",
-    "reproca": "file:../reproca/client/typescript"
-  },
-  "devDependencies": {
-    "@preact/preset-vite": "^2.8.2",
-    "prettier": "latest",
-    "vite": "^5.2.13"
-  }
+    "name": "frontend",
+    "description": "frontend",
+    "version": "1.0.0",
+    "author": {
+        "name": "aspizu",
+        "email": "aspizu@protonmail.com"
+    },
+    "type": "module",
+    "scripts": {
+        "fmt": "bunx prettier --write . ; rye fmt",
+        "fe": "bunx vite",
+        "be": "uvicorn src.backend:app --reload",
+        "be-prod": "uvicorn src.backend:app",
+        "build": "bunx vite build",
+        "memcache": "memcached -s $MEMCACHE",
+        "postgres": "systemctl start postgresql",
+        "psql": "psql -d $DBNAME"
+    },
+    "dependencies": {
+        "@preact/signals": "^1.2.3",
+        "@radix-ui/react-icons": "^1.3.0",
+        "date-fns": "^3.6.0",
+        "preact": "^10.22.0",
+        "reproca": "file:./reproca/client/typescript"
+    },
+    "devDependencies": {
+        "@preact/preset-vite": "^2.8.2",
+        "prettier": "latest",
+        "vite": "^5.2.13"
+    }
 }
