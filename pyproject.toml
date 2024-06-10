@@ -20,7 +20,10 @@ build-backend = "hatchling.build"
 
 [tool.rye]
 managed = true
-dev-dependencies = ["uvicorn>=0.30.1"]
+dev-dependencies = [
+    "uvicorn>=0.30.1",
+    "toml-to-requirements>=0.2.2",
+]
 
 [tool.hatch.metadata]
 allow-direct-references = true
