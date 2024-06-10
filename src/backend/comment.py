@@ -1,12 +1,12 @@
 import contextlib
 
 from psycopg.errors import ForeignKeyViolation
+
 from reproca.method import method
 
-from backend.misc import seconds_since_1970
-from backend.models import Session
-
 from .db import db
+from .misc import seconds_since_1970
+from .models import Session
 
 MAX_CONTENT_LEN = 4096
 

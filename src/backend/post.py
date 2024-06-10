@@ -2,11 +2,11 @@ import contextlib
 
 from msgspec import Struct
 from psycopg.errors import ForeignKeyViolation
+
 from reproca.method import method
 
-from backend.misc import seconds_since_1970
-
 from .db import db
+from .misc import seconds_since_1970
 from .models import Comment, Post, Reply, Session, Vote
 
 MIN_BOARD_LEN = 3

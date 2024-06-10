@@ -1,8 +1,7 @@
 from reproca.method import method
 
-from backend.models import Post, Session, Vote
-
 from .db import db
+from .models import Post, Session, Vote
 
 
 @method
