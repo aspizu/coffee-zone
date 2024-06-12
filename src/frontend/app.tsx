@@ -14,6 +14,7 @@ import {Submit} from "./pages/submit"
 import {User} from "./pages/user"
 import {Verify} from "./pages/verify"
 import {VerifyToken} from "./pages/verify-token"
+import {slowLoad} from "./session"
 import {Parameter} from "./signal-router/route"
 import {Title} from "./signal-router/title"
 
@@ -33,6 +34,15 @@ export function App() {
     })
     return (
         <main class="app">
+            {slowLoad.value && (
+                <div class="loading-disclaimer">
+                    <div class="spinner" />
+                    <span>
+                        render.com puts my app to sleep after inactivity, so it might
+                        take upto 60 seconds to load.
+                    </span>
+                </div>
+            )}
             <Header />
             {match({
                 root: () => (
