@@ -1,8 +1,10 @@
 import {Signal, useSignal, useSignalEffect} from "@preact/signals"
+import {formatDistanceToNow, formatISO} from "date-fns"
 import * as api from "~/api"
-import {Author} from "~/components/author"
+import {Avatar} from "~/components/avatar"
 import {Post} from "~/components/post"
 import {downvoteScore, upvoteScore} from "~/models"
+import {Link} from "~/signal-router/link"
 import {navigate} from "~/signal-router/location"
 import {NotFound} from "./not-found"
 
@@ -71,14 +73,33 @@ export function User({username}: UserProps) {
     }
     return (
         <>
-            <Author
-                avatar={user.value.avatar}
-                username={username.value}
-                status={user.value.status}
-                joinedAt={user.value.created_at}
-                lastLoginAt={user.value.last_login_at}
-                karma={user.value.karma}
-            />
+            <div class="profile">
+                <Avatar size="large">{user.value.avatar}</Avatar>
+                <div className="profile__box">
+                    <Link class="link link--large" href={`/user/${username.value}`}>
+                        {username}
+                    </Link>
+                    <span class="profile__status">{user.value.status}</span>
+                    <time
+                        class="profile__status"
+                        datetime={formatISO(user.value.created_at * 1000)}
+                    >
+                        Joined {formatDistanceToNow(user.value.created_at * 1000)} ago
+                    </time>
+                    <time
+                        class="profile__status"
+                        datetime={formatISO(user.value.last_login_at * 1000)}
+                    >
+                        Last seen {formatDistanceToNow(user.value.last_login_at * 1000)}{" "}
+                        ago
+                    </time>
+                </div>
+                <div className="separator" />
+                <div className="profile__digit">
+                    <span className="profile__digit-count">{user.value.karma}</span>
+                    <span className="profile__digit-label">KARMA</span>
+                </div>
+            </div>
             <div className="feed">
                 {user.value.posts.map((post) => (
                     <Post

@@ -437,8 +437,12 @@ async def get_user(session: Session | None, username: str) -> User | None:
                 status,
                 created_at,
                 last_login_at,
-                (select sum(vote) from post_vote join post on post.id = post_vote.post
-                where post.author = account.id) as karma
+                coalesce(
+                    (select sum(vote) from post_vote
+                    join post on post.id = post_vote.post
+                    where post.author = account.id),
+                    0
+                ) as karma
             from account
             where username = %(username)s
             """,
