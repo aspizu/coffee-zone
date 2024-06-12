@@ -4,6 +4,13 @@ export interface AvatarProps {
 
 export function Avatar({children}: AvatarProps) {
     return children.startsWith("emoji:") ?
-            <span class="avatar-emoji">{children.slice("emoji:".length)}</span>
+            <div class="avatar-emoji">
+                <span class="avatar-emoji__emoji">
+                    {children.slice("emoji:".length)}
+                </span>
+                <span class="avatar-emoji__backdrop">
+                    {children.slice("emoji:".length)}
+                </span>
+            </div>
         :   <img class="avatar-image" src={children} />
 }
