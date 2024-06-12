@@ -87,7 +87,7 @@ async def get_board_feed(session: Session | None, board: str) -> list[Post]:
             from post
             join account on post.author = account.id
             where board = (select id from board where name = %(board)s)
-            order by score desc
+            order by post.created_at desc
             """,
             dict(voter=session.id if session else None, board=board),
         )
